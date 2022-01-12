@@ -32,6 +32,7 @@ class Customers(models.Model):
     lastName = models.CharField(max_length=100, blank=True, null=True, default="")
     email = models.EmailField(blank=True, null=True, default="")
     phone = models.CharField(max_length=100, blank=True, null=True, default="")
+    dateRegister = models.DateTimeField(default=timezone.now)
 
 
 class Orders(models.Model):
