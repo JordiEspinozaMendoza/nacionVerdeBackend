@@ -27,9 +27,7 @@ def getExcel(request):
                 ]
             )
         sheet = excel.pe.Sheet(export)
-        return excel.make_response(
-            sheet, "csv", file_name="customers.xlsx"
-        )
+        return excel.make_response(sheet, "csv", file_name="customers.xlsx")
 
     except Exception as e:
         print(str(e))
@@ -37,6 +35,7 @@ def getExcel(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def getAll(request):
     try:
         items = Customers.objects.all()
@@ -47,6 +46,7 @@ def getAll(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def get(request, pk):
     try:
         item = Customers.objects.get(_id=pk)
@@ -69,6 +69,7 @@ def post(request):
                 name=data["name"],
                 lastName=data["lastName"],
                 email=data["email"],
+                phone=data["phone"],
             )
             item.save()
         return Response(
