@@ -29,7 +29,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG =os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "nacionverde.herokuapp.com"]
-
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
