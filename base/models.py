@@ -1,14 +1,13 @@
 from django.db import models
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class Categories(models.Model):
     _id = models.AutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=255, blank=True, null=True, default=None)
     description = models.TextField(blank=True, null=True, default=None)
-    image = models.ImageField(
-        upload_to="images/categories", blank=True, null=True, default=None
-    )
+    image = CloudinaryField("image", null=True, blank=True)
 
 
 class Products(models.Model):
@@ -16,9 +15,7 @@ class Products(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True, default="")
     price = models.FloatField(blank=True, null=True, default=0.0)
     description = models.TextField(blank=True, null=True, default="")
-    image = models.ImageField(
-        upload_to="images/products", blank=True, null=True, default=""
-    )
+    image = CloudinaryField("image", null=True, blank=True)
     quantityStock = models.IntegerField(blank=True, null=True, default=0)
     isPublic = models.BooleanField(blank=True, null=True, default=True)
     categorie = models.ForeignKey(
@@ -73,7 +70,7 @@ class Solutions(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True, default="")
     short_description = models.TextField(blank=True, null=True, default="")
     description = models.TextField(blank=True, null=True, default="")
-    image = models.CharField(max_length=255, blank=True, null=True, default="")
+    image = CloudinaryField("image", null=True, blank=True)
     type = models.CharField(max_length=100, blank=True, null=True, default="")
     benefit_1 = models.TextField(blank=True, null=True, default="")
     benefit_2 = models.TextField(blank=True, null=True, default="")

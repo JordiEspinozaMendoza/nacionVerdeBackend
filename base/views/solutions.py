@@ -47,8 +47,9 @@ def post(request):
             phrase=data["phrase"],
             phrase_author=data["phrase_author"],
             icon=data["icon"],
-            image=data["image"],
         )
+        if data["image"] is not None:
+            item.image = data["image"]
         item.save()
         return Response(
             {"message": "Successfully created"}, status=status.HTTP_201_CREATED
@@ -77,7 +78,8 @@ def put(request, pk):
         item.phrase = data["phrase"]
         item.phrase_author = data["phrase_author"]
         item.icon = data["icon"]
-        item.image = data["image"]
+        if data["image"] is not None:
+            item.image = data["image"]
         item.save()
         return Response({"message": "Successfully updated"}, status=status.HTTP_200_OK)
     except Exception as e:
