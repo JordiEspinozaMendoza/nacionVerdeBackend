@@ -27,7 +27,7 @@ def getExcel(request):
                 ]
             )
         sheet = excel.pe.Sheet(export)
-        return excel.make_response(sheet, "csv", file_name="customers.xlsx")
+        return excel.make_response(sheet, "csv", file_name="customers.xls")
 
     except Exception as e:
         print(str(e))
