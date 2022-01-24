@@ -33,11 +33,12 @@ def getCartProducts(request):
         data = request.data
         items = []
         for item in data:
-            items.append(Products.objects.get(_id=item["id"]))
+            items.append(Products.objects.get(_id=item["_id"]))
 
         serializer = ProductsSerializer(items, many=True)
         return Response(serializer.data)
     except Exception as e:
+        print(str(e))
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
