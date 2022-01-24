@@ -12,6 +12,7 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 import os
 
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def getAll(request):
@@ -27,7 +28,7 @@ def getAll(request):
 @permission_classes([IsAuthenticated, IsAdminUser])
 def get(request, pk):
     try:
-        item = Donations.objects.get(_id=pk).order_by('-_id')
+        item = Donations.objects.get(_id=pk).order_by("-_id")
         serializer = DonationsSerializer(item)
         return Response(serializer.data)
     except Exception as e:
@@ -57,7 +58,7 @@ def create(request):
         email = EmailMultiAlternatives(
             "Certificado de donación",
             "",
-            settings.EMAIL_HOST_USER,
+            os.environ.get("EMAIL_CLIENT"),
             [data["email"]],
         )
         pdf = createPdf(f"{data['name']} {data['lastName']}", data["quantity"])
