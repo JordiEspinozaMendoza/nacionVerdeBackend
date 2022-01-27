@@ -7,7 +7,9 @@ from rest_framework import status
 from base.serializers.customers import CustomersSerializer
 
 import django_excel as excel
-
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+import os
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdminUser])
@@ -105,3 +107,28 @@ def delete(request, pk):
         return Response({"message": "Successfully deleted"}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+@api_view(["POST"])
+def sendReport(request):
+    try:
+        data = request.data
+        template = render_to_string(
+            "report.html", {
+                "name": data["name"],
+                "city": data["city"],
+                "email": data["email"],
+                "context": data["context"],
+            }
+        )
+        email = EmailMultiAlternatives(
+            "Denuncia",
+            template,
+            os.environ.get("EMAIL_CLIENT"),
+            [os.environ.get("EMAIL_CLIENT")],
+        )
+        email.fail_silently = False
+        email.send()
+        return Response({"message": "Successfully sent"}, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(str(e))
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
