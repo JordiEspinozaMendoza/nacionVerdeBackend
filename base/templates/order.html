@@ -104,21 +104,37 @@
               <!-- Headline -->
               <tr>
                 <td style="padding: 20px;">
-                  <h1 style="margin: 0; font-size: 32px; text-align: center;">Detalles de la denuncia</h1>
+                  <h1 style="margin: 0; font-size: 32px; text-align: center;">Detalles de la orden</h1>
                 </td>
               </tr>
     
               <!-- Body copy -->
               <tr>
                 <td style="padding: 20px;">
-                  <p style="margin: 0 0 20px 0;">Nombre: {{ name }}</p>
+                  <p style="margin: 0 0 20px 0;">Nombre: {{ name }} {{ lastName }}</p>
                   <p style="margin: 0 0 20px 0;">Correo: {{ email }}</p>
-                  <p style="margin: 0 0 20px 0;">Ciudad: {{ city }}</p>
                   <p style="margin: 0 0 20px 0;">Teléfono: {{ phone }}</p>
-                  <p style="margin: 0 0 20px 0;">Mensaje: {{ context }}</p>
-                  <p style="margin: 0 0 20px 0;">Tipo: {{ type }}</p>
+                  <p style="margin: 0 0 20px 0;">Total pagado: ${{ total }} MXN</p>
                 </td>
               </tr>
+              
+              <tr>
+                <td style="padding: 20px;">
+                    <h1>
+                        Objetos comprados
+                    </h1>
+                </td>
+              </tr>
+              {% for item in orderItems %}
+                <tr>
+                    <td style="padding: 20px;">
+                    <p style="margin: 0 0 20px 0;">Nombre: {{ item.name }}</p>
+                    <p style="margin: 0 0 20px 0;">Cantidad: {{ item.quantity }} unidades</p>
+                    <p style="margin: 0 0 20px 0;">Precio por unidad: ${{ item.price }} MXN</p>
+                    <p style="margin: 0 0 20px 0;">Total: ${{ item.total }} MXN</p>
+                    </td>
+                </tr>
+                {% endfor %}
             </table>
           </td>
         </tr>

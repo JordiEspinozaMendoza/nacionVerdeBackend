@@ -10,6 +10,9 @@ from base.serializers.orders import OrderSerializer
 from rest_framework import status
 from datetime import datetime
 
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+import os
 
 @api_view(["POST"])
 def addOrderItems(request):
@@ -55,7 +58,41 @@ def addOrderItems(request):
                     # (4) Update total
                     order.total += item.total
                     order.save()
+            # * Send email
+            orderItemsDict = []
+            for i in orderItems:
+                product = Products.objects.get(_id=i["_id"])
+                orderItemsDict.append(
+                    {
+                        "name": product.name,
+                        "price": product.price,
+                        "quantity": i["quantity"],
+                        "total": i["quantity"] * product.price,
+                    }
+                )
+            template = render_to_string(
+                "order.html",
+                {
+                    "name": customerData["name"],
+                    "lastName": customerData["lastName"],
+                    "email": customerData["email"],
+                    "phone": customerData["phone"],
+                    "orderItems": orderItemsDict,
+                    "total": order.total,
+                    "date": datetime.now(),
+                },
+            )
 
+            email = EmailMultiAlternatives(
+                "Detalles de orden",
+                template,
+                os.environ.get("EMAIL_CLIENT"),
+                ["jordi.espinoza193@tectijuana.edu.mx"],
+            )
+            email.attach_alternative(template, "text/html")
+
+            email.fail_silently = False
+            email.send()
             serializer = OrderSerializer(order, many=False)
 
             return Response(serializer.data)

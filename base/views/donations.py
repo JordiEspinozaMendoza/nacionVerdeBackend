@@ -11,6 +11,7 @@ from base.pdfUtils.main import createPdf
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 import os
+from django.template.loader import render_to_string
 
 
 @api_view(["GET"])
@@ -55,6 +56,14 @@ def create(request):
             )
             item.customer = newCustomer
         item.save()
+        template = render_to_string(
+                "certificate.html",
+                {
+                    "name": data["name"],
+                    "lastName": data["lastName"],
+                    "quantity": data["quantity"],
+                },
+            )
         email = EmailMultiAlternatives(
             "Certificado de donación",
             "",
@@ -63,6 +72,7 @@ def create(request):
         )
         pdf = createPdf(f"{data['name']} {data['lastName']}", data["quantity"])
         email.attach_file(pdf, "application/pdf")
+        email.attach_alternative(template, "text/html")
         email.send()
         # Delete pdf
         os.remove(pdf)

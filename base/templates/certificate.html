@@ -104,19 +104,20 @@
               <!-- Headline -->
               <tr>
                 <td style="padding: 20px;">
-                  <h1 style="margin: 0; font-size: 32px; text-align: center;">Detalles de la denuncia</h1>
+                  <h1 style="margin: 0; font-size: 32px; text-align: center;">Detalles de la orden</h1>
                 </td>
               </tr>
     
               <!-- Body copy -->
               <tr>
                 <td style="padding: 20px;">
-                  <p style="margin: 0 0 20px 0;">Nombre: {{ name }}</p>
-                  <p style="margin: 0 0 20px 0;">Correo: {{ email }}</p>
-                  <p style="margin: 0 0 20px 0;">Ciudad: {{ city }}</p>
-                  <p style="margin: 0 0 20px 0;">Teléfono: {{ phone }}</p>
-                  <p style="margin: 0 0 20px 0;">Mensaje: {{ context }}</p>
-                  <p style="margin: 0 0 20px 0;">Tipo: {{ type }}</p>
+                  <p style="margin: 0 0 20px 0;">Muchas gracias por tu donación: {{ name }} {{ lastName }}</p>
+                  <p style="margin: 0 0 20px 0;">Te hacemos llegar tu certificado de donación por este medio</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 20px;">
+                  <p style="margin: 0 0 20px 0;">Total de árboles: {{ quantity }}</p>
                 </td>
               </tr>
             </table>

@@ -8,8 +8,9 @@ from base.serializers.customers import CustomersSerializer
 
 import django_excel as excel
 from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template.loader import render_to_string
 import os
+from django.template.loader import render_to_string
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdminUser])
@@ -107,28 +108,42 @@ def delete(request, pk):
         return Response({"message": "Successfully deleted"}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 @api_view(["POST"])
 def sendReport(request):
     try:
         data = request.data
+        type = ""
+        if data["type"] == "report":
+            type = "Denuncia"
+        else:
+            type = "Reforestación de terreno"
         template = render_to_string(
-            "report.html", {
+            "report.html",
+            {
                 "name": data["name"],
                 "city": data["city"],
                 "email": data["email"],
                 "context": data["context"],
-            }
+                "type": type,
+                "phone": data["phone"],
+            },
         )
+
         email = EmailMultiAlternatives(
-            "Denuncia",
+            type,
             template,
             os.environ.get("EMAIL_CLIENT"),
-            [os.environ.get("EMAIL_CLIENT")],
+            [data["email"], os.environ.get("EMAIL_CLIENT")],
         )
+        email.attach_alternative(template, "text/html")
+        imageReport = request.FILES["image"]
+        email.attach(imageReport.name, imageReport.read(), imageReport.content_type)
+
         email.fail_silently = False
         email.send()
         return Response({"message": "Successfully sent"}, status=status.HTTP_200_OK)
     except Exception as e:
         print(str(e))
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
