@@ -138,8 +138,9 @@ def sendReport(request):
             [data["email"], os.environ.get("EMAIL_CLIENT")],
         )
         email.attach_alternative(template, "text/html")
-        imageReport = request.FILES["image"]
-        email.attach(imageReport.name, imageReport.read(), imageReport.content_type)
+        if data["image"] != "null" and data["image"] != "" and data["image"] != "null":
+            imageReport = request.FILES["image"]
+            email.attach(imageReport.name, imageReport.read(), imageReport.content_type)
 
         email.fail_silently = False
         email.send()
