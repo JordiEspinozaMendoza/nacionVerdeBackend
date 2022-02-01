@@ -14,6 +14,7 @@ import os
 from django.template.loader import render_to_string
 
 
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def getAll(request):
@@ -57,13 +58,13 @@ def create(request):
             item.customer = newCustomer
         item.save()
         template = render_to_string(
-                "certificate.html",
-                {
-                    "name": data["name"],
-                    "lastName": data["lastName"],
-                    "quantity": data["quantity"],
-                },
-            )
+            "certificate.html",
+            {
+                "name": data["name"],
+                "lastName": data["lastName"],
+                "quantity": data["quantity"],
+            },
+        )
         email = EmailMultiAlternatives(
             "Certificado de donación",
             "",
