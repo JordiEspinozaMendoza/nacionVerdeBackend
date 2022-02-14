@@ -68,7 +68,7 @@ def create_donation(request):
     stripe.Subscription.create(
         customer=customer,
         items=[
-            {"price": "price_1KOHHbDNjxjGFODWOnZcgcB5", "quantity": data["quantity"]},
+            {"price": os.environ.get("STRIPE_PRODUCT"), "quantity": data["quantity"]},
         ],  # here paste your price id
     )
     return Response(

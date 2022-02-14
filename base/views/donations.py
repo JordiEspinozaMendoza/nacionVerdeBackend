@@ -14,7 +14,6 @@ import os
 from django.template.loader import render_to_string
 
 
-
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def getAll(request):
@@ -47,6 +46,14 @@ def create(request):
             quantity=data["quantity"],
         )
         if Customers.objects.filter(email=data["email"]).exists():
+            customer = Customers.objects.get(email=data["email"])
+            customer.name = data["name"]
+            customer.phone = data["phone"]
+            customer.lastName = data["lastName"]
+            customer.age = data["age"]
+            customer.wantsToReceiveEmails = data["wantsToReceiveEmails"]
+            customer.gender = data["gender"]
+            customer.save()
             item.customer = Customers.objects.get(email=data["email"])
         else:
             newCustomer = Customers.objects.create(
@@ -54,6 +61,9 @@ def create(request):
                 lastName=data["lastName"],
                 email=data["email"],
                 phone=data["phone"],
+                age=data["age"],
+                gender=data["gender"],
+                wantsToReceiveEmails=data["wantsToReceiveEmails"],
             )
             item.customer = newCustomer
         item.save()

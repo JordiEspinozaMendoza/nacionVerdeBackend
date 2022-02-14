@@ -14,6 +14,7 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
 import os
 
+
 @api_view(["POST"])
 def addOrderItems(request):
     try:
@@ -32,13 +33,24 @@ def addOrderItems(request):
                 status=True,
             )
             if Customers.objects.filter(email=customerData["email"]).exists():
+                customer = Customers.objects.get(email=customerData["email"])
+                customer.name = customerData["name"]
+                customer.phone = customerData["phone"]
+                customer.lastName = customerData["lastName"]
+                customer.age = customerData["age"]
+                customer.wantsToReceiveEmails = customerData["wantsToReceiveEmails"]
+                customer.gender = customerData["gender"]
+                customer.save()
                 order.customer = Customers.objects.get(email=customerData["email"])
             else:
                 newCustomer = Customers.objects.create(
                     name=customerData["name"],
                     lastName=customerData["lastName"],
+                    age=customerData["age"],
+                    gender=customerData["gender"],
                     email=customerData["email"],
                     phone=customerData["phone"],
+                    wantsToReceiveEmails=customerData["wantsToReceiveEmails"],
                 )
                 order.customer = newCustomer
 

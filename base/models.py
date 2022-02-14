@@ -30,6 +30,11 @@ class Customers(models.Model):
     email = models.EmailField(blank=True, null=True, default="")
     phone = models.CharField(max_length=100, blank=True, null=True, default="")
     dateRegister = models.DateTimeField(default=timezone.now)
+    gender = models.CharField(
+        max_length=100, blank=True, null=True, default="Not specified"
+    )
+    age = models.IntegerField(blank=True, null=True, default=0)
+    wantsToReceiveEmails = models.BooleanField(default=False, blank=True, null=True)
 
 
 class Orders(models.Model):
@@ -84,3 +89,15 @@ class Solutions(models.Model):
     phrase = models.TextField(blank=True, null=True, default="")
     phrase_author = models.TextField(blank=True, null=True, default="")
     icon = models.CharField(max_length=100, blank=True, null=True, default="")
+
+
+class Reports(models.Model):
+    _id = models.AutoField(primary_key=True, editable=False)
+    name = models.CharField(max_length=255, blank=True, null=True, default="")
+    city = models.CharField(max_length=255, blank=True, null=True, default="")
+    email = models.EmailField(blank=True, null=True, default="")
+    context = models.TextField(blank=True, null=True, default="")
+    type = models.CharField(max_length=255, blank=True, null=True, default="")
+    date = models.DateTimeField(auto_now_add=True)
+    phone = models.CharField(max_length=255, blank=True, null=True, default="")
+    image = CloudinaryField("image", null=True, blank=True)

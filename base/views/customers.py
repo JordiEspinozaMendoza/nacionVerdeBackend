@@ -18,15 +18,28 @@ def getExcel(request):
     try:
         export = []
         customers = Customers.objects.all()
-        export.append(["ID", "Nombre", "Correo", "Teléfono", "Fecha registro"])
+        export.append(
+            ["ID", "Nombre", "Edad", "Género", "Correo", "Teléfono", "Fecha registro", "¿Quiere recibir notificaciones?"]
+        )
         for customer in customers:
+            gender = ""
+            if customer.gender == "male":
+                gender = "Masculino"
+            elif customer.gender == "female":
+                gender = "Femenino"
+            else:
+                gender = "No especificado"
+            
             export.append(
                 [
                     customer._id,
                     customer.name,
+                    customer.age,
+                    gender,
                     customer.email,
                     customer.phone,
                     customer.dateRegister,
+                    "Si" if  customer.wantsToReceiveEmails else "No"
                 ]
             )
         sheet = excel.pe.Sheet(export)
@@ -63,6 +76,7 @@ def get(request, pk):
 def post(request):
     try:
         data = request.data
+        print(data)
         if Customers.objects.filter(email=data["email"]).exists():
             return Response(
                 {"error": "Correo ya registrado"}, status=status.HTTP_400_BAD_REQUEST
@@ -73,6 +87,9 @@ def post(request):
                 lastName=data["lastName"],
                 email=data["email"],
                 phone=data["phone"],
+                age=data["age"],
+                gender=data["gender"],
+                wantsToReceiveEmails=data["wantsToReceiveEmails"]
             )
             item.save()
         return Response(
