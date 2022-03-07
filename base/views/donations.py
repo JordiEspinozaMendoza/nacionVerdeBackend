@@ -67,26 +67,30 @@ def create(request):
             )
             item.customer = newCustomer
         item.save()
-        template = render_to_string(
-            "certificate.html",
-            {
-                "name": data["name"],
-                "lastName": data["lastName"],
-                "quantity": data["quantity"],
-            },
-        )
-        email = EmailMultiAlternatives(
-            "Certificado de donación",
-            "",
-            os.environ.get("EMAIL_CLIENT"),
-            [data["email"]],
-        )
-        pdf = createPdf(f"{data['name']} {data['lastName']}", data["quantity"])
-        email.attach_file(pdf, "application/pdf")
-        email.attach_alternative(template, "text/html")
-        email.send()
-        # Delete pdf
-        os.remove(pdf)
+        try:
+            template = render_to_string(
+                "certificate.html",
+                {
+                    "name": data["name"],
+                    "lastName": data["lastName"],
+                    "quantity": data["quantity"],
+                },
+            )
+            email = EmailMultiAlternatives(
+                "Certificado de donación",
+                "",
+                os.environ.get("EMAIL_CLIENT"),
+                [data["email"]],
+            )
+            pdf = createPdf(f"{data['name']} {data['lastName']}", data["quantity"])
+            email.attach_file(pdf, "application/pdf")
+            email.attach_alternative(template, "text/html")
+            email.send()
+            # Delete pdf
+            os.remove(pdf)
+        except Exception as e:
+            print("Error sending email: ", e)
+
         serializer = DonationsSerializer(item)
         return Response(serializer.data)
     except Exception as e:

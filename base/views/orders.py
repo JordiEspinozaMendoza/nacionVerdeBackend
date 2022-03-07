@@ -82,29 +82,33 @@ def addOrderItems(request):
                         "total": i["quantity"] * product.price,
                     }
                 )
-            template = render_to_string(
-                "order.html",
-                {
-                    "name": customerData["name"],
-                    "lastName": customerData["lastName"],
-                    "email": customerData["email"],
-                    "phone": customerData["phone"],
-                    "orderItems": orderItemsDict,
-                    "total": order.total,
-                    "date": datetime.now(),
-                },
-            )
+            try: 
+                template = render_to_string(
+                    "order.html",
+                    {
+                        "name": customerData["name"],
+                        "lastName": customerData["lastName"],
+                        "email": customerData["email"],
+                        "phone": customerData["phone"],
+                        "orderItems": orderItemsDict,
+                        "total": order.total,
+                        "date": datetime.now(),
+                    },
+                )
 
-            email = EmailMultiAlternatives(
-                "Detalles de orden",
-                template,
-                os.environ.get("EMAIL_CLIENT"),
-                ["jordi.espinoza193@tectijuana.edu.mx"],
-            )
-            email.attach_alternative(template, "text/html")
+                email = EmailMultiAlternatives(
+                    "Detalles de orden",
+                    template,
+                    os.environ.get("EMAIL_CLIENT"),
+                    ["jordi.espinoza193@tectijuana.edu.mx"],
+                )
+                email.attach_alternative(template, "text/html")
 
-            email.fail_silently = False
-            email.send()
+                email.fail_silently = False
+                email.send()
+            except Exception as e:
+                print("Error sending email: ", e)
+                
             serializer = OrderSerializer(order, many=False)
 
             return Response(serializer.data)
